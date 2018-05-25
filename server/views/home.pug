@@ -1,0 +1,20 @@
+doctype html
+html(lang="en")
+  head
+    title= pageTitle
+    script.
+      function getDouban() {
+        fetch('/api/douban', {method: 'post', data: {page : 1}})
+          .then(res => res.json())
+          .then(res => {
+            console.log(res);
+          })
+      }
+  body
+    h1 Pug - node template engine
+    #container.col
+      p.
+        Pug is a terse and simple templating language with a
+        strong focus on performance and powerful features.
+        #{title}
+      button(class='btn', onclick='getDouban()') 获取
