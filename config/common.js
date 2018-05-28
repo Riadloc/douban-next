@@ -1,6 +1,13 @@
 import fetch from 'isomorphic-unfetch'
 import baseUrl from './base'
 
+const config = {
+  picUrl: {
+    icon: 'https://img3.doubanio.com/icon/',
+    view: 'https://img1.doubanio.com/view/group_topic/large/public/'
+  }
+}
+
 function axios(rel_url, opt) {
   const default_opt = {type: 'get'};
   const url = baseUrl + rel_url;
@@ -16,5 +23,6 @@ function axios(rel_url, opt) {
 }
 
 export {
+  config,
   axios
 }

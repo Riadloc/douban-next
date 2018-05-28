@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@zeit/next-css": "^0.2.0",
     "antd": "^3.5.3",
     "dayjs": "^1.6.0",
     "isomorphic-unfetch": "^2.0.0",
@@ -27,6 +28,10 @@
     "unfetch": "^3.0.0"
   },
   "devDependencies": {
-    "babel-plugin-import": "^1.7.0"
+    "babel-plugin-import": "^1.7.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4"
+  },
+  "theme": {
+    "primary-color": "#1DA57A"
   }
 }

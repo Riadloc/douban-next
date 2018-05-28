@@ -74,7 +74,7 @@ let select = function( table, keys ) {
   return query( _sql, [ keys, table ] )
 }
 
-let count = function( table ) {
+let count = function( table = 'douban' ) {
   let  _sql =  "SELECT COUNT(*) AS total_count FROM ?? "
   return query( _sql, [ table ] )
 }
