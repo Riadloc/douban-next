@@ -37,17 +37,16 @@ let createTable = function( sql ) {
 }
 
 
-let findDataById = function( table,  id ) {
+let findDataById = function( {table='douban',  id} ) {
   let  _sql =  "SELECT * FROM ?? WHERE id = ? "
-  return query( _sql, [ table, id, start, end ] )
+  return query( _sql, [ table, id] )
 }
 
 
-let findDataByPage = function({page = 1, pageSize = 10}, table = 'douban', keys = '*') {
+let findDataByPage = function({page = 1, pageSize = 12}, table = 'douban', keys = '*') {
   const start = (page - 1) * pageSize;
-  const end = start + pageSize;
   let  _sql =  "SELECT ?? FROM ??  LIMIT ? , ?"
-  return query( _sql, [keys,  table,  start, end ] )
+  return query( _sql, [keys,  table,  start, pageSize ] )
 }
 
 

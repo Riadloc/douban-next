@@ -1,5 +1,6 @@
 import { Row, Col, Input, Icon } from 'antd'
 import Head from 'next/head'
+import Link from 'next/link'
 
 const Layout = ({children}) => 
   <div>
@@ -22,24 +23,41 @@ const Layout = ({children}) =>
         box-shadow: 0 1px 3px rgba(26,26,26,.1);
         background-clip: content-box;
       }
+      .app_header .logo img {
+        height: 90px;
+      }
       .app_header .app_header_inner {
         display: flex;
         align-items: center;
         height: 52px;
       }
+      .navigation {
+        width: 160px;
+      }
       .app-content {
         margin: 10px 0;
+      }
+      .logo {
+        cursor: pointer;
       }
     `}</style>
     <header role="banner" className="sticky app_header">
       <Row type="flex" justify="center">
         <Col xs={24} sm={21} lg={18}>
           <div className="app_header_inner">
-          <Input
-            style={{width: '360px'}}
-            placeholder="输入查找条件"
-            suffix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />}
-          />
+            <div className="logo">
+              <Link href="/frontend">
+                <img src="/static/images/logo.png" alt="FineHome"/>
+              </Link>
+            </div>
+            <nav role="navigation" className="navigation"></nav>
+            <div className="search_content">
+              <Input
+                style={{width: '300px'}}
+                placeholder="输入查找条件"
+                suffix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              />
+            </div>
           </div>
         </Col>
       </Row>

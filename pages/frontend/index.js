@@ -1,26 +1,31 @@
 import React, { Component } from 'react'
 import { Card, Pagination } from 'antd'
+import Link from 'next/link'
 import Layout from '../../components/layout'
-import { axios, config } from '../../config/common'
+import { fetch, config } from '../../config/common'
 
 const { picUrl } = config;
 
 const CardList = ({houseList}) => {
   return houseList.map((item, index) => {
     const detail_imgs = JSON.parse(item.detail_imgs);
-    return (<Card
-      key={index}
-      hoverable
-      style={{width: 300}}
-      cover={<img className="house_cover" src={picUrl.view + detail_imgs[0]}/>}
-      >
-      <div className="house_card_head">
-        <img src={picUrl.icon + item.avatar} alt={item.user}/>
-        <h4>{item.user}</h4>
-        <span className="pull-right">{item.created_time}</span>
-      </div>
-      <p>{item.title}</p>
-    </Card>)
+    const cover = detail_imgs[0] ? picUrl.view + detail_imgs[0] : 'http://www.gaoxiaogif.com/d/file/201611/165c0721ea7cff7cae4bac7302172286.jpg';
+    return (
+      <Link href={{ pathname: '/frontend/detail', query: { id: item.ID } }} key={index}>
+        <Card
+          hoverable
+          style={{width: 300}}
+          cover={<img className="house_cover" src={cover}/>}
+          >
+          <div className="house_card_head">
+            <img src={picUrl.icon + item.avatar} alt={item.user}/>
+            <h4>{item.user}</h4>
+            <span className="pull-right">{item.created_time}</span>
+          </div>
+          <p>{item.title}</p>
+        </Card>
+      </Link>
+    )
   })
 }
 
@@ -30,25 +35,26 @@ class Index extends Component {
     this.state = {
       current: 1,
       total: 1,
-      house_list: []
+      list: {
+        houseList: [],
+        amount: 0
+      }
     }
   }
 
-  onPageChange = (page) => {
-    this.setState({
-      current: page
-    })
+  componentDidMount = () => {
+    this.getHouseList()
   }
 
   render() {
-    const { houseList, amount } = this.props;
+    const { list } = this.state;
     return (
       <Layout>
         <div className="card_list">
-          <CardList houseList={houseList}/>
+          <CardList houseList={list.houseList}/>
         </div>
         <div className="house_card_pagination">
-          <Pagination current={this.state.current} onChange={this.onPageChange} total={amount} />;
+          <Pagination current={this.state.current} onChange={this.onPageChange} total={list.amount} pageSize={12}/>;
         </div>
         <style jsx global>{`
           .card_list {
@@ -86,11 +92,28 @@ class Index extends Component {
       </Layout>
     )
   }
+
+  onPageChange = (page) => {
+    this.setState({
+      current: page
+    })
+    this.getHouseList(page);
+  }
+
+  getHouseList(page) {
+    const current = page || 1;
+    fetch('/api/getHouseList', {method: 'post', data: {page : current}})
+      .then(res => {
+        this.setState({
+          list: res
+        })
+      })
+  }
 }
 
-Index.getInitialProps = async function () {
-  const data = await axios('/api/getHouseList', {method: 'post', body: {page : 1}})
-  return data; // data: { houseList: Array, amount: Number }
-}
+// Index.getInitialProps = async function () {
+//   const data = await axios('/api/getHouseList', {method: 'post', body: {page : 1}, env: 'server'})
+//   return data; // data: { houseList: Array, amount: Number }
+// }
 
 export default Index;

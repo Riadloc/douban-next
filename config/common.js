@@ -1,4 +1,4 @@
-import fetch from 'isomorphic-unfetch'
+import axios from 'axios'
 import baseUrl from './base'
 
 const config = {
@@ -8,14 +8,13 @@ const config = {
   }
 }
 
-function axios(rel_url, opt) {
-  const default_opt = {type: 'get'};
+function fetch(rel_url, opt) {
+  const default_opt = {method: 'get'};
   const url = baseUrl + rel_url;
-  const options = Object.assign({}, default_opt, opt);
+  const options = Object.assign({url}, default_opt, opt);
   return new Promise((resolve, reject) => {
-    fetch(url, options)
-      .then(res => res.json())
-      .then(res => resolve(res))
+    axios(options)
+      .then(res => resolve(res.data))
       .catch(err => {
         console.error(err)
       })
@@ -24,5 +23,5 @@ function axios(rel_url, opt) {
 
 export {
   config,
-  axios
+  fetch
 }

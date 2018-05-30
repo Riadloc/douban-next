@@ -4,7 +4,7 @@ const iPhone = devices['iPhone 6'];
 const dayjs = require('dayjs');
 const fs = require("fs");
 const { GROUP_RENTING } = require('../static/config');
-const { insertData, findDataByPage, count } = require('../utils/db-util');
+const { insertData, findDataByPage, findDataById, count } = require('../utils/db-util');
 
 module.exports = {
   async spider(ctx) {
@@ -14,7 +14,7 @@ module.exports = {
     const offset = 25;
     const timeReg = /^\d{4}-\d{2}-\d{2}$/;
     const currentYear = dayjs().year();
-    const end = dayjs(currentYear + '-05-28');
+    const end = dayjs(currentYear + '-05-30');
     let flag = true;
     const page = await browser.newPage();
     const page_detail = await browser.newPage();
@@ -43,11 +43,12 @@ module.exports = {
         const detail = await page_detail.$eval('.topic-content', content => {
           const avatar = $(content).find('.user-face img').attr('src').split('/').slice(-1)[0];
           const created_time = $(content).find('.topic-doc .color-green').text();
+          const description = $(content).find('#link-report .topic-richtext p').text() || '';
           const detail_imgs = [];
           $(content).find('#link-report .topic-richtext img').each((idx, x) => {
             detail_imgs.push($(x).attr('src').split('/').slice(-1)[0]);
           })
-          return { avatar, created_time, detail_imgs: JSON.stringify(detail_imgs) }
+          return { avatar, description, created_time, detail_imgs: JSON.stringify(detail_imgs) }
         })
         html[index] = Object.assign(value, detail);
         await page_detail.waitFor(300);
@@ -71,5 +72,12 @@ module.exports = {
   async getListAmount(ctx) {
     const amount = await count();
     ctx.body = { amount };
+  },
+
+  async getHouseById(ctx) {
+    const formdata = ctx.request.body;
+    const { id } = formdata;
+    const result = await findDataById({id});
+    ctx.body = { houseInfo: result[0] };
   }
 }
