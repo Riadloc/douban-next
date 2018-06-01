@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Card, Pagination } from 'antd'
 import Link from 'next/link'
-import Layout from '../../components/layout'
-import { fetch, config } from '../../config/common'
+import Layout from '../components/layout'
+import { fetch, config } from '../config/common'
 
 const { picUrl } = config;
 
@@ -11,7 +11,7 @@ const CardList = ({houseList}) => {
     const detail_imgs = JSON.parse(item.detail_imgs);
     const cover = detail_imgs[0] ? picUrl.view + detail_imgs[0] : 'http://www.gaoxiaogif.com/d/file/201611/165c0721ea7cff7cae4bac7302172286.jpg';
     return (
-      <Link href={{ pathname: '/frontend/detail', query: { id: item.ID } }} key={index}>
+      <Link href={{ pathname: '/detail', query: { id: item.ID } }} key={index}>
         <Card
           hoverable
           style={{width: 300}}

@@ -51,7 +51,7 @@ let findDataByPage = function({page = 1, pageSize = 12}, table = 'douban', keys 
 
 
 let insertData = function(values ) {
-  let _sql = "INSERT INTO douban SET ?"
+  let _sql = "INSERT IGNORE INTO douban SET ?"
   return query( _sql, values)
 }
 

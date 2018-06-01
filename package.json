@@ -14,7 +14,7 @@
     "@zeit/next-css": "^0.2.0",
     "antd": "^3.5.3",
     "axios": "^0.18.0",
-    "dayjs": "^1.6.0",
+    "dayjs": "^1.6.5",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",

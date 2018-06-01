@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import Layout from '../../components/layout'
-import { fetch, config } from '../../config/common'
+import React, { Component } from 'react'
+import Layout from '../components/layout'
+import { fetch, config } from '../config/common'
 
 const { picUrl } = config;
 
