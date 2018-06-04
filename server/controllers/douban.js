@@ -4,22 +4,20 @@ const iPhone = devices['iPhone 6'];
 const dayjs = require('dayjs');
 const fs = require("fs");
 const { GROUP_RENTING } = require('../static/config');
-const spider = require('../services/spider')
-const { insertData, findDataByPage, findDataById, count } = require('../utils/db-util');
+const { spider } = require('../services/spider')
+const { findDataByParams, findDataById, count } = require('../utils/db-util');
 const dataFormat = 'YYYY-MM-DD';
 
 module.exports = {
   async doSpider(ctx) {
-    const today = dayjs().format(dataFormat);
     const formdata = ctx.request.body;
-    const list = await spider(formdata);
-    ctx.body = { msg: 'success', list };
+    await spider(formdata);
+    ctx.body = { data: '执行完成！' };
   },
 
   async getHouseList(ctx) {
     const formdata = ctx.request.body;
-    const { page } = formdata;
-    const houseList = await findDataByPage({page});
+    const houseList = await findDataByParams(formdata);
     const amount = await count();
     ctx.body = { houseList, amount: amount[0]['total_count'] };
   },

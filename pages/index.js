@@ -9,9 +9,9 @@ const { picUrl } = config;
 const CardList = ({houseList}) => {
   return houseList.map((item, index) => {
     const detail_imgs = JSON.parse(item.detail_imgs);
-    const cover = detail_imgs[0] ? picUrl.view + detail_imgs[0] : 'http://www.gaoxiaogif.com/d/file/201611/165c0721ea7cff7cae4bac7302172286.jpg';
+    const cover = detail_imgs[0] ? picUrl.view + detail_imgs[0] : 'http://d.5857.com/glgs_160913/003.jpg';
     return (
-      <Link href={{ pathname: '/detail', query: { id: item.ID } }} key={index}>
+      <Link href={{ pathname: '/detail', query: { id: item.id } }} key={index}>
         <Card
           hoverable
           style={{width: 300}}
@@ -20,7 +20,7 @@ const CardList = ({houseList}) => {
           <div className="house_card_head">
             <img src={picUrl.icon + item.avatar} alt={item.user}/>
             <h4>{item.user}</h4>
-            <span className="pull-right">{item.created_time}</span>
+            <span className="pull-right">{item.create_time}</span>
           </div>
           <p>{item.title}</p>
         </Card>
@@ -49,7 +49,7 @@ class Index extends Component {
   render() {
     const { list } = this.state;
     return (
-      <Layout>
+      <Layout search={this.getHouseList}>
         <div className="card_list">
           <CardList houseList={list.houseList}/>
         </div>
@@ -97,12 +97,12 @@ class Index extends Component {
     this.setState({
       current: page
     })
-    this.getHouseList(page);
+    this.getHouseList({page});
   }
 
-  getHouseList(page) {
-    const current = page || 1;
-    fetch('/api/getHouseList', {method: 'post', data: {page : current}})
+  getHouseList(params) {
+    const { page = 1, keyword = '' } = params || {};
+    fetch('/api/getHouseList', {method: 'post', data: {page, keyword}})
       .then(res => {
         this.setState({
           list: res

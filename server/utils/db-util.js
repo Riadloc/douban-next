@@ -43,10 +43,13 @@ let findDataById = function( {table='douban',  id} ) {
 }
 
 
-let findDataByPage = function({page = 1, pageSize = 12}, table = 'douban', keys = '*') {
+let findDataByParams = function({page = 1, pageSize = 12, keyword = '%'}, table = 'douban', keys = '*') {
   const start = (page - 1) * pageSize;
-  let  _sql =  "SELECT ?? FROM ??  LIMIT ? , ?"
-  return query( _sql, [keys,  table,  start, pageSize ] )
+  if (keyword !== '%') {
+    keyword = `%${keyword}%`;
+  }
+  let  _sql =  "SELECT ?? FROM ?? WHERE title LIKE ? LIMIT ? , ?"
+  return query( _sql, [keys,  table, keyword, start, pageSize ] )
 }
 
 
@@ -82,7 +85,7 @@ module.exports = {
   query,
   createTable,
   findDataById,
-  findDataByPage,
+  findDataByParams,
   deleteDataById,
   insertData,
   updateData,

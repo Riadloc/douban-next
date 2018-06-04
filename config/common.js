@@ -16,6 +16,7 @@ function fetch(rel_url, opt) {
     axios(options)
       .then(res => resolve(res.data))
       .catch(err => {
+        reject(err)
         console.error(err)
       })
   })

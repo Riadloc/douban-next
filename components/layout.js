@@ -3,7 +3,11 @@ import Head from 'next/head'
 import Link from 'next/link'
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 
-const Layout = ({children, pure = false}) => 
+const search = (children) => {
+  console.log(children)
+}
+
+const Layout = ({children, pure = false, search}) => 
   <LocaleProvider locale={zhCN}>
     <div>
       <Head>
@@ -57,6 +61,7 @@ const Layout = ({children, pure = false}) =>
                 <Input
                   style={{width: '300px'}}
                   placeholder="输入查找条件"
+                  onPressEnter={search.bind(null, {page: 1, keyword: '个人'})}
                   suffix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />}
                 />
               </div>
@@ -64,13 +69,13 @@ const Layout = ({children, pure = false}) =>
           </Col>
         </Row>
       </header>) : null}
-        <article role="main-content" className="app-content">
-          <Row type="flex" justify="center">
-            <Col xs={24} sm={21} lg={18}>
-              {children}
-            </Col>
-          </Row>
-        </article>
+      <article role="main-content" className="app-content">
+        <Row type="flex" justify="center">
+          <Col xs={24} sm={21} lg={18}>
+            {children}
+          </Col>
+        </Row>
+      </article>
     </div>
   </LocaleProvider>
 

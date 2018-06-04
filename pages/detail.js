@@ -34,7 +34,7 @@ class Detail extends Component {
           <div className="user_info">
             <img src={picUrl.icon + houseInfo.avatar} alt={houseInfo.user}/>
             <h4>{houseInfo.user}</h4>
-            <span className="pull-right">{houseInfo.created_time}</span>
+            <span className="pull-right">{houseInfo.create_time}</span>
           </div>
           <div className="house_info_wrapper">
             <div className="house_desc">
