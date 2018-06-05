@@ -43,13 +43,13 @@ let findDataById = function( {table='douban',  id} ) {
 }
 
 
-let findDataByParams = function({page = 1, pageSize = 12, keyword = '%'}, table = 'douban', keys = '*') {
+let findDataByParams = function({page = 1, pageSize = 12, keyword = '%', order = 'update_time'}, table = 'douban', keys = '*') {
   const start = (page - 1) * pageSize;
   if (keyword !== '%') {
     keyword = `%${keyword}%`;
   }
-  let  _sql =  "SELECT ?? FROM ?? WHERE title LIKE ? LIMIT ? , ?"
-  return query( _sql, [keys,  table, keyword, start, pageSize ] )
+  let  _sql =  "SELECT ?? FROM ?? WHERE title LIKE ? ORDER BY ?? DESC LIMIT ? , ?"
+  return query( _sql, [keys,  table, keyword, order, start, pageSize ] )
 }
 
 
@@ -76,9 +76,12 @@ let select = function( table, keys ) {
   return query( _sql, [ keys, table ] )
 }
 
-let count = function( table = 'douban' ) {
-  let  _sql =  "SELECT COUNT(*) AS total_count FROM ?? "
-  return query( _sql, [ table ] )
+let count = function( {table = 'douban', keyword = '%'} ) {
+  if (keyword !== '%') {
+    keyword = `%${keyword}%`;
+  }
+  let  _sql =  "SELECT COUNT(*) AS total_count FROM ?? WHERE title LIKE ?"
+  return query( _sql, [ table, keyword ] )
 }
 
 module.exports = {

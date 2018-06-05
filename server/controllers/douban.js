@@ -18,7 +18,7 @@ module.exports = {
   async getHouseList(ctx) {
     const formdata = ctx.request.body;
     const houseList = await findDataByParams(formdata);
-    const amount = await count();
+    const amount = await count(formdata);
     ctx.body = { houseList, amount: amount[0]['total_count'] };
   },
 

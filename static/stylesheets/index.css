@@ -1,0 +1,31 @@
+.card_list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.card_list .ant-card {
+  margin: 0 10px 10px 0;
+}
+.card_list .ant-card-body {
+  padding: 12px;
+}
+.card_list .house_cover {
+  height: 300px;
+  object-fit: cover;
+}
+.house_card_head img{
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+.house_card_head h4 {
+  display: inline;
+  margin-left: 2px;
+}
+.house_card_head span {
+  font-size: 12px;
+  color: #999;
+  margin-top: 6px;
+}
+.pull-right {
+  float: right;
+}

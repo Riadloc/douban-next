@@ -20,12 +20,7 @@ module.exports = {
     } = formdata;
     if (typeof frequency === 'string') frequency = Number(frequency);
 
-    const browser = await puppeteer.launch({
-      ignoreHTTPSErrors: true,
-      args: [
-        '--proxy-server=222.185.160.135:6666'
-      ]
-    });
+    const browser = await puppeteer.launch();
     let start = 0;
     const offset = 25;
     const timeReg = /^\d{4}-\d{2}-\d{2}$/;
@@ -35,6 +30,7 @@ module.exports = {
     const page = await browser.newPage();
     const page_detail = await browser.newPage();
     while (flag) {
+      console.log(`..........开始爬取${start/25 + 1}页.........`)
       await page.goto(GROUP_RENTING + 'start='+ start);
       await page.waitForSelector('.olt');
       const html = await page.$$eval('.olt tr', list => {
@@ -71,9 +67,10 @@ module.exports = {
           list.push(Object.assign(detail, value));
           await page_detail.waitFor(1500);
         }).catch(() => {
-          console.log(value.id);
+          console.log(value.id + ' failed');
         })
       }
+      console.log(`..........爬取${start/25 + 1}页完成.........`)
       start = start + offset;
       await page.waitFor(1500);
     }
@@ -101,5 +98,6 @@ module.exports = {
         await insertData(item);
       };
     })
+    console.log('..........爬取完成.........')
   }
 }
