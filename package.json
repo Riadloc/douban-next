@@ -8,8 +8,8 @@
     "dev": "nodemon app.js",
     "start": "NODE_ENV=production node app.js",
     "build": "next build",
-    "start—schedule": "node /server/schedule/start.js",
-    "stop—schedule": "node /server/schedule/stop.js"
+    "start—schedule": "node server/schedule/start.js",
+    "stop—schedule": "node server/schedule/stop.js"
   },
   "keywords": [],
   "author": "",
