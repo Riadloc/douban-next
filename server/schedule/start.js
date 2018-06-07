@@ -1,7 +1,7 @@
 const { spider } = require('../services/spider');
 
 function start() {
-  spider()
+  spider({})
 }
 
 start()
