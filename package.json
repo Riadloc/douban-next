@@ -8,8 +8,7 @@
     "dev": "nodemon app.js",
     "start": "NODE_ENV=production node app.js",
     "build": "next build",
-    "start—schedule": "node server/schedule/start.js",
-    "stop—schedule": "node server/schedule/stop.js"
+    "spider": "node server/schedule/start.js"
   },
   "keywords": [],
   "author": "",
@@ -36,7 +35,6 @@
     "babel-plugin-import": "^1.7.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "node-schedule": "^1.3.0",
     "nodemon": "^1.17.5"
   }
 }
