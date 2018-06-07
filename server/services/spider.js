@@ -84,7 +84,7 @@ module.exports = {
       update_time = update_time.split(' ')[0];
       if (!timeReg.test(update_time)) update_time = `${currentYear}-${update_time}`;
       update_time = dayjs(update_time);
-      const flag_1 = !(dayjs(updateTimeBegin).isAfter(create_time) || dayjs(updateTimeEnd).isBefore(dayjs(create_time)))
+      const flag_1 = !(dayjs(createTimeBegin).isAfter(create_time) || dayjs(createTimeEnd).isBefore(dayjs(create_time)))
       const flag_2 = !dayjs(updateTimeEnd).isBefore(dayjs(update_time));
       let flag_3 = true;
       if (keyword.trim()) {
