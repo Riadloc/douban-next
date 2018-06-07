@@ -20,7 +20,9 @@ module.exports = {
     } = formdata;
     if (typeof frequency === 'string') frequency = Number(frequency);
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox']
+    });
     let start = 0;
     const offset = 25;
     const timeReg = /^\d{4}-\d{2}-\d{2}$/;
