@@ -53,9 +53,9 @@ module.exports = {
             flag = false;
             break;
           }
-          await page_detail.goto(link).then(async () => {
+          await page_detail.goto(link, { timeout: 1000 }).then(async () => {
             delete value['link'];
-            await page_detail.waitForSelector('.topic-content', { timeout: 1000 }).then(async () => {
+            await page_detail.waitForSelector('.topic-content', { timeout: 2000 }).then(async () => {
               const detail = await page_detail.$eval('.topic-content', content => {
                 const avatar = $(content).find('.user-face img').attr('src').split('/').slice(-1)[0];
                 const create_time = $(content).find('.topic-doc .color-green').text();
