@@ -79,9 +79,9 @@ module.exports = {
         start = start + offset;
         await page.waitFor(1500);
       }).catch(async (err) => {
+        console.log((start/25+1) + '页 failed: ' + err.msg);
         start = start + offset;
         await page.waitFor(1500);
-        console.log((start/25+1) + '页 failed');
       })
     }
     await browser.close();
