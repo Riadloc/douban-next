@@ -53,7 +53,7 @@ module.exports = {
             flag = false;
             break;
           }
-          await page_detail.goto(link, { timeout: 1000 }).then(async () => {
+          await page_detail.goto(link, { timeout: 10000 }).then(async () => {
             delete value['link'];
             await page_detail.waitForSelector('.topic-content', { timeout: 2000 }).then(async () => {
               const detail = await page_detail.$eval('.topic-content', content => {
@@ -71,14 +71,16 @@ module.exports = {
             }).catch(() => {
               console.log(value.id + ' failed');
             })
-          }).catch(() => {
-            console.log('something failed');
+          }).catch((err) => {
+            console.log(err.msg);
           })
         }
         console.log(`..........爬取${start/25 + 1}页完成.........`)
         start = start + offset;
         await page.waitFor(1500);
-      }).catch((err) => {
+      }).catch(async (err) => {
+        start = start + offset;
+        await page.waitFor(1500);
         console.log((start/25+1) + '页 failed');
       })
     }
