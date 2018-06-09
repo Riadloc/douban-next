@@ -32,6 +32,7 @@ module.exports = {
     const page = await browser.newPage();
     const page_detail = await browser.newPage();
     while (flag) {
+      if (start/25 > 5) break;
       console.log(`..........开始爬取${start/25 + 1}页.........`)
       await page.goto(GROUP_RENTING + 'start='+ start).then(async () => {
         await page.waitForSelector('.olt');
@@ -68,11 +69,12 @@ module.exports = {
               })
               list.push(Object.assign(detail, value));
               await page_detail.waitFor(1500);
-            }).catch(() => {
+            }).catch(async () => {
               console.log(value.id + ' failed');
             })
-          }).catch((err) => {
+          }).catch(async (err) => {
             console.log(err.msg);
+            await page_detail.waitFor(1500);
           })
         }
         console.log(`..........爬取${start/25 + 1}页完成.........`)
