@@ -49,7 +49,7 @@ let findDataByParams = function({page = 1, pageSize = 12, keyword = '%', order =
     keyword = `%${keyword}%`;
   }
   let  _sql =  "SELECT * FROM ?? WHERE title LIKE ? ORDER BY ?? DESC LIMIT ? , ?"
-  return query( _sql, [keys,  table, keyword, order, start, pageSize ] )
+  return query( _sql, [table, keyword, order, start, pageSize ] )
 }
 
 
