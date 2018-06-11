@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Card, Pagination } from 'antd'
 import { inject, observer } from 'mobx-react'
-import Link from 'next/link'
 import { getHouseList } from '../store/actions'
 import { config } from '../config/common'
 const { picUrl } = config;
@@ -13,7 +12,7 @@ const CardList = ({houseList}) => {
     const detail_imgs = JSON.parse(item.detail_imgs);
     const cover = detail_imgs[0] ? picUrl.view + detail_imgs[0] : 'http://d.5857.com/glgs_160913/003.jpg';
     return (
-      <Link href={{ pathname: '/detail', query: { id: item.id } }} key={index}>
+      <a href={`/detail?id=${item.id}`} target="_new" key={index}>
         <Card
           hoverable
           style={{width: 300}}
@@ -26,7 +25,7 @@ const CardList = ({houseList}) => {
           </div>
           <p>{item.title}</p>
         </Card>
-      </Link>
+      </a>
     )
   })
 }

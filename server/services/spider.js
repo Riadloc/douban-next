@@ -19,7 +19,8 @@ module.exports = {
       frequency = 20
     } = formdata;
     if (typeof frequency === 'string') frequency = Number(frequency);
-
+    
+    const delay = 1500;
     const browser = await puppeteer.launch({
       args: ['--no-sandbox']
     });
@@ -55,7 +56,6 @@ module.exports = {
             break;
           }
           await page_detail.goto(link, { timeout: 10000 }).then(async () => {
-            delete value['link'];
             await page_detail.waitForSelector('.topic-content', { timeout: 2000 }).then(async () => {
               const detail = await page_detail.$eval('.topic-content', content => {
                 const avatar = $(content).find('.user-face img').attr('src').split('/').slice(-1)[0];
@@ -68,28 +68,28 @@ module.exports = {
                 return { avatar, description, create_time, detail_imgs: JSON.stringify(detail_imgs) }
               })
               list.push(Object.assign(detail, value));
-              await page_detail.waitFor(1500);
+              await page_detail.waitFor(delay);
             }).catch(async () => {
               console.log(value.id + ' failed');
             })
           }).catch(async (err) => {
-            console.log(err.msg);
-            await page_detail.waitFor(1500);
+            console.log(err);
+            await page_detail.waitFor(delay);
           })
         }
         console.log(`..........爬取${start/25 + 1}页完成.........`)
         start = start + offset;
-        await page.waitFor(1500);
+        await page.waitFor(delay);
       }).catch(async (err) => {
         console.log((start/25+1) + '页 failed: ' + err.msg);
         start = start + offset;
-        await page.waitFor(1500);
+        await page.waitFor(delay);
       })
     }
     await browser.close();
     const user_list_arr = list.map(item => item.user);
     const user_list_str = ',' + user_list_arr.join(',') + ',';
-    list.forEach(async (item) => {
+    list.forEach((item) => {
       let { create_time, update_time, title, user, description } = item;
       create_time = dayjs(create_time.split(' ')[0]);
       update_time = update_time.split(' ')[0];
@@ -106,7 +106,7 @@ module.exports = {
       freqs = freqs ? freqs.length : 0;
       const flag_4 = freqs < frequency;
       if (flag_1 && flag_2 && flag_3 && flag_4) {
-        await insertData(item);
+        insertData(item);
       };
     })
     console.log('..........爬取完成.........')

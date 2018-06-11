@@ -9,10 +9,10 @@ const { findDataByParams, findDataById, count } = require('../utils/db-util');
 const dataFormat = 'YYYY-MM-DD';
 
 module.exports = {
-  async doSpider(ctx) {
+  doSpider(ctx) {
     const formdata = ctx.request.body;
-    await spider(formdata);
-    ctx.body = { data: '执行完成！' };
+    spider(formdata);
+    ctx.body = { data: '已接受爬虫请求！' };
   },
 
   async getHouseList(ctx) {
