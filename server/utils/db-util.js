@@ -43,12 +43,9 @@ let findDataById = function( {table='douban',  id} ) {
 }
 
 
-let findDataByParams = function({page = 1, pageSize = 12, keyword = '%', order = 'update_time'}, table = 'douban') {
+let findDataByParams = function({page = 1, pageSize = 12, keyword, order = 'update_time'}, table = 'douban') {
   const start = (page - 1) * pageSize;
-  if (keyword !== '%') {
-    keyword = `%${keyword}%`;
-  }
-  let  _sql =  "SELECT * FROM ?? WHERE title LIKE ? ORDER BY ?? DESC LIMIT ? , ?"
+  let  _sql =  "SELECT * FROM ?? WHERE title REGEXP ? ORDER BY ?? DESC LIMIT ? , ?"
   return query( _sql, [table, keyword, order, start, pageSize ] )
 }
 
@@ -76,11 +73,8 @@ let select = function( table, keys ) {
   return query( _sql, [ keys, table ] )
 }
 
-let count = function( {table = 'douban', keyword = '%'} ) {
-  if (keyword !== '%') {
-    keyword = `%${keyword}%`;
-  }
-  let  _sql =  "SELECT COUNT(*) AS total_count FROM ?? WHERE title LIKE ?"
+let count = function( {table = 'douban', keyword} ) {
+  let  _sql =  "SELECT COUNT(*) AS total_count FROM ?? WHERE title REGEXP ?"
   return query( _sql, [ table, keyword ] )
 }
 

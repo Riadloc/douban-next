@@ -1,12 +1,6 @@
-const puppeteer = require('puppeteer');
-const devices = require('puppeteer/DeviceDescriptors');
-const iPhone = devices['iPhone 6'];
-const dayjs = require('dayjs');
-const fs = require("fs");
-const { GROUP_RENTING } = require('../static/config');
+const nodejieba = require('nodejieba');
 const { spider } = require('../services/spider')
 const { findDataByParams, findDataById, count } = require('../utils/db-util');
-const dataFormat = 'YYYY-MM-DD';
 
 module.exports = {
   doSpider(ctx) {
@@ -16,7 +10,15 @@ module.exports = {
   },
 
   async getHouseList(ctx) {
-    const formdata = ctx.request.body;
+    let formdata = ctx.request.body;
+    let reg = '^.*$';
+    const { keyword } = formdata;
+    if (keyword && keyword.trim()) {
+      const result = nodejieba.extract(keyword, 5).map(item => `(?=.*${item.word})`).join('');
+      reg = result + reg;
+      console.log(result);
+    }
+    formdata = Object.assign(formdata, { keyword: reg });
     const houseList = await findDataByParams(formdata);
     const amount = await count(formdata);
     ctx.body = { houseList, amount: amount[0]['total_count'] };

@@ -41,6 +41,9 @@ class Detail extends Component {
               { houseInfo.description }
             </div>
             <ImageList images={detail_imgs}/>
+            <div className="house_source_link pull-right">
+              <p>来源：<a href={houseInfo.link}>{houseInfo.link}</a></p>
+            </div>
           </div>
         </div>
         <style jsx global>{`
