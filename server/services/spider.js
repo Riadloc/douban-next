@@ -20,7 +20,8 @@ module.exports = {
     } = formdata;
     if (typeof frequency === 'string') frequency = Number(frequency);
     
-    const delay = 1500;
+    const currentHour = dayjs().hour();
+    const delay = (currentHour < 21 && currentHour > 4) ? 1500 : 800;
     const browser = await puppeteer.launch({
       args: ['--no-sandbox']
     });
@@ -48,7 +49,10 @@ module.exports = {
           })
         });
         for (const value of html) {
-          let { update_time, link } = value;
+          const { update_time, link, tittle } = value;
+          const rentReg = /(\D|^)\d{4}(\D|$)/;
+          const [unitReg, oneReg, TwoReg, ThreeReg, fourReg] =
+            [/一室|二室|三室|四室|单间|两室|双人间|三人间|四人间|主卧|次卧/, /一室|单间|主卧|次卧/, /二室|双人间|两室/, /三室|三人间/, /四室|四人间/];
           update_time = update_time.split(' ')[0];
           if (!timeReg.test(update_time)) update_time = `${currentYear}-${update_time}`;
           if (dayjs(updateTimeBegin).isAfter(dayjs(update_time))) {
@@ -65,7 +69,20 @@ module.exports = {
                 $(content).find('#link-report .topic-richtext img').each((idx, x) => {
                   detail_imgs.push($(x).attr('src').split('/').slice(-1)[0]);
                 })
-                return { avatar, description, create_time, detail_imgs: JSON.stringify(detail_imgs) }
+                let [rent, unit] = [0, ''];
+                if (title.match(rentReg)) {
+                  rent = Number.parseInt(title.match(rentReg));
+                } else if (description.match(rentReg)) {
+                  rent = Number.parseInt(description.match(rentReg));
+                }
+                if (title.match(unitReg) || description.match(unitReg)) {
+                  const temp_unit = title.match(unitReg) || description.match(unitReg);
+                  if (oneReg.test(temp_unit)) unit = '一室';
+                  else if (TwoReg.test(temp_unit)) unit = '二室';
+                  else if (ThreeReg.test(temp_unit)) unit = '三室';
+                  else if (fourReg.test(temp_unit)) unit = '四室';
+                }
+                return { avatar, description, create_time, rent, unit, detail_imgs: JSON.stringify(detail_imgs) }
               })
               list.push(Object.assign(detail, value));
               await page_detail.waitFor(delay);

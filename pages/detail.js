@@ -19,7 +19,6 @@ class Detail extends Component {
 
   static async getInitialProps({query}) {
     const { id } = query;
-    console.log(id);
     const house_info = await fetch('/api/getHouseById', {method: 'post', data: {id}})
     return {house_info};
   }

@@ -12,13 +12,15 @@ module.exports = {
   async getHouseList(ctx) {
     let formdata = ctx.request.body;
     let reg = '^.*$';
-    const { keyword } = formdata;
+    let { keyword, unit } = formdata;
     if (keyword && keyword.trim()) {
       const result = nodejieba.extract(keyword, 5).map(item => `(?=.*${item.word})`).join('');
       reg = result + reg;
-      console.log(result);
     }
-    formdata = Object.assign(formdata, { keyword: reg });
+    if (!unit) {
+      unit = '^.*$';
+    }
+    formdata = Object.assign(formdata, { keyword: reg, unit });
     const houseList = await findDataByParams(formdata);
     const amount = await count(formdata);
     ctx.body = { houseList, amount: amount[0]['total_count'] };

@@ -43,15 +43,15 @@ let findDataById = function( {table='douban',  id} ) {
 }
 
 
-let findDataByParams = function({page = 1, pageSize = 12, keyword, order = 'update_time'}, table = 'douban') {
+let findDataByParams = function({page=1,pageSize=12,keyword,rentRange=[0,10000],unit,order='update_time'}, table = 'douban') {
   const start = (page - 1) * pageSize;
-  let  _sql =  "SELECT * FROM ?? WHERE title REGEXP ? ORDER BY ?? DESC LIMIT ? , ?"
-  return query( _sql, [table, keyword, order, start, pageSize ] )
+  let  _sql =  "SELECT * FROM ?? WHERE title REGEXP ? AND (rent>=? AND rent <=?) AND unit REGEXP ? ORDER BY ?? DESC LIMIT ? , ?"
+  return query( _sql, [table, keyword, rentRange[0], rentRange[1], unit, order, start, pageSize ] )
 }
 
 
 let insertData = function(values ) {
-  let _sql = "INSERT IGNORE INTO douban SET ?"
+  let _sql = "REPLACE INTO douban SET ?"
   return query( _sql, values)
 }
 

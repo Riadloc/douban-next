@@ -7,6 +7,7 @@ const database = {
   database : 'world'
 }
 
+
 module.exports = {
   GROUP_RENTING,
   BASE_URL

@@ -8,16 +8,29 @@ const config = {
   }
 }
 
+function toggleSpin(flag) {
+  const spin = document.querySelector('.fine-home-spin');
+  const display = spin.style.display;
+  const newStatus = flag ? 'inline-block' : 'none';
+  if (display === newStatus) return;
+  spin.style.display = newStatus;
+}
+
 function fetch(rel_url, opt) {
   const default_opt = {method: 'get'};
   const url = baseUrl + rel_url;
   const options = Object.assign({url}, default_opt, opt);
+  toggleSpin(true);
   return new Promise((resolve, reject) => {
     axios(options)
-      .then(res => resolve(res.data))
+      .then(res => {
+        toggleSpin(false)
+        resolve(res.data)
+      })
       .catch(err => {
-        reject(err)
+        toggleSpin(false)
         console.error(err)
+        reject(err)
       })
   })
 }
