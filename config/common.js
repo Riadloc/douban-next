@@ -9,11 +9,15 @@ const config = {
 }
 
 function toggleSpin(flag) {
-  const spin = document.querySelector('.fine-home-spin');
-  const display = spin.style.display;
-  const newStatus = flag ? 'inline-block' : 'none';
-  if (display === newStatus) return;
-  spin.style.display = newStatus;
+  try {
+    const spin = document.querySelector('.fine-home-spin');
+    const display = spin.style.display;
+    const newStatus = flag ? 'inline-block' : 'none';
+    if (display === newStatus) return;
+    spin.style.display = newStatus;
+  } catch (error) {
+    return false;
+  }
 }
 
 function fetch(rel_url, opt) {

@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const devices = require('puppeteer/DeviceDescriptors');
+const _ = require('lodash/lang')
 const iPhone = devices['iPhone 6'];
 const dayjs = require('dayjs');
 const fs = require("fs");
@@ -22,6 +23,7 @@ module.exports = {
     
     const currentHour = dayjs().hour();
     const delay = (currentHour < 21 && currentHour > 4) ? 1500 : 800;
+    console.log(delay);
     const browser = await puppeteer.launch({
       args: ['--no-sandbox']
     });
@@ -34,7 +36,7 @@ module.exports = {
     const page = await browser.newPage();
     const page_detail = await browser.newPage();
     while (flag) {
-      if (start/25 > 5) break;
+      if (start/25 > 3) break;
       console.log(`..........开始爬取${start/25 + 1}页.........`)
       await page.goto(GROUP_RENTING + 'start='+ start).then(async () => {
         await page.waitForSelector('.olt');
@@ -49,8 +51,8 @@ module.exports = {
           })
         });
         for (const value of html) {
-          const { update_time, link, tittle } = value;
-          const rentReg = /(\D|^)\d{4}(\D|$)/;
+          let { update_time, link } = value;
+          const rentReg = /(\D|^)(\d{4})(\D|$)/;
           const [unitReg, oneReg, TwoReg, ThreeReg, fourReg] =
             [/一室|二室|三室|四室|单间|两室|双人间|三人间|四人间|主卧|次卧/, /一室|单间|主卧|次卧/, /二室|双人间|两室/, /三室|三人间/, /四室|四人间/];
           update_time = update_time.split(' ')[0];
@@ -69,25 +71,33 @@ module.exports = {
                 $(content).find('#link-report .topic-richtext img').each((idx, x) => {
                   detail_imgs.push($(x).attr('src').split('/').slice(-1)[0]);
                 })
-                let [rent, unit] = [0, ''];
-                if (title.match(rentReg)) {
-                  rent = Number.parseInt(title.match(rentReg));
-                } else if (description.match(rentReg)) {
-                  rent = Number.parseInt(description.match(rentReg));
-                }
-                if (title.match(unitReg) || description.match(unitReg)) {
-                  const temp_unit = title.match(unitReg) || description.match(unitReg);
-                  if (oneReg.test(temp_unit)) unit = '一室';
-                  else if (TwoReg.test(temp_unit)) unit = '二室';
-                  else if (ThreeReg.test(temp_unit)) unit = '三室';
-                  else if (fourReg.test(temp_unit)) unit = '四室';
-                }
-                return { avatar, description, create_time, rent, unit, detail_imgs: JSON.stringify(detail_imgs) }
+                return { avatar, description, create_time, detail_imgs: JSON.stringify(detail_imgs) }
               })
-              list.push(Object.assign(detail, value));
+              const [title, description] = [value.title, detail.description];
+              let [rent, unit, temp] = [0, '', null];
+              if (title.match(rentReg)) {
+                temp = title.match(rentReg);
+                if (_.isArray(temp)) temp = temp[0];
+                rent = Number.parseInt(temp.replace(rentReg, '$2'));
+              } else if (description.match(rentReg)) {
+                temp = description.match(rentReg);
+                if (_.isArray(temp)) temp = temp[0];
+                rent = Number.parseInt(temp.replace(rentReg, '$2'));
+              }
+              if (title.match(unitReg) || description.match(unitReg)) {
+                temp = title.match(unitReg) || description.match(unitReg);
+                if (_.isArray(temp)) temp = temp[0];
+                if (oneReg.test(temp)) unit = '一室';
+                else if (TwoReg.test(temp)) unit = '二室';
+                else if (ThreeReg.test(temp)) unit = '三室';
+                else if (fourReg.test(temp)) unit = '四室';
+              }
+              list.push(Object.assign(detail, value, { rent, unit }));
               await page_detail.waitFor(delay);
-            }).catch(async () => {
+            }).catch(async (err) => {
               console.log(value.id + ' failed');
+              console.log(err);
+              await page_detail.waitFor(delay);
             })
           }).catch(async (err) => {
             console.log(err);
@@ -98,7 +108,7 @@ module.exports = {
         start = start + offset;
         await page.waitFor(delay);
       }).catch(async (err) => {
-        console.log((start/25+1) + '页 failed: ' + err.msg);
+        console.log((start/25+1) + '页 failed: ' + err);
         start = start + offset;
         await page.waitFor(delay);
       })

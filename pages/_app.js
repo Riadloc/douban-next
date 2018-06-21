@@ -67,6 +67,7 @@ export default class MyApp extends App {
             position: fixed!important;
             top: 40%;
             left: 50%;
+            display: none;
           }
           .logo {
             cursor: pointer;

@@ -45,7 +45,9 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 1
+      current: 1,
+      rentRange: [1000, 5000],
+      unit: ''
     }
   }
 
@@ -64,8 +66,28 @@ class Home extends Component {
     getHouseList({page});
   }
 
-  onRentRangeChange = (value) => {
-    console.log(value);
+  onRentRangeChange = (type, value) => {
+    const idxMap = { 'from': 0, 'to': 1 };
+    const index = idxMap[type];
+    this.setState(prevState => {
+      const { rentRange } = prevState;
+      rentRange[index] = value;
+      return ({
+        rentRange
+      })
+    })
+  }
+
+  onUnitChange = (e) => {
+    const value = e.target.value;
+    this.setState({
+      unit: value
+    })
+  }
+
+  filter = () => {
+    const { rentRange, unit } = this.state;
+    getHouseList({rentRange, unit, page: 1});
   }
 
   render () {
@@ -81,26 +103,26 @@ class Home extends Component {
                     <label>租金：</label>
                     <InputNumber
                       defaultValue={1000}
-                      onChange={this.onRentRangeChange}
+                      onChange={this.onRentRangeChange.bind(null, 'from')}
                     />
                     <span className="separators">-</span>
                     <InputNumber
                       defaultValue={5000}
-                      onChange={this.onRentRangeChange}
+                      onChange={this.onRentRangeChange.bind(null, 'to')}
                     />
                   </li>
                   <li>
                     <label>厅室：</label>
-                    <RadioGroup>
-                      <Radio value={1}>一室</Radio>
-                      <Radio value={2}>二室</Radio>
-                      <Radio value={3}>三室</Radio>
-                      <Radio value={4}>四室</Radio>
+                    <RadioGroup onChange={this.onUnitChange}>
+                      <Radio value="一室">一室</Radio>
+                      <Radio value="二室">二室</Radio>
+                      <Radio value="三室">三室</Radio>
+                      <Radio value="四室">四室</Radio>
                     </RadioGroup>
                   </li>
                   <li>
                     <label>　　　</label>
-                    <Button type="primary" htmlType="button">筛选</Button>
+                    <Button type="primary" htmlType="button" onClick={this.filter}>筛选</Button>
                     <Button htmlType="button" style={{marginLeft: 6}}>重置</Button>
                   </li>
                 </ul>
