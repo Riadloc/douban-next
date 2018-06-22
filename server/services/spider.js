@@ -36,7 +36,7 @@ module.exports = {
     const page = await browser.newPage();
     const page_detail = await browser.newPage();
     while (flag) {
-      if (start/25 > 3) break;
+      if (start/25 > 4) break;
       console.log(`..........开始爬取${start/25 + 1}页.........`)
       await page.goto(GROUP_RENTING + 'start='+ start).then(async () => {
         await page.waitForSelector('.olt');

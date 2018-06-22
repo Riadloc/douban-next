@@ -8,7 +8,7 @@ import _ from 'lodash/lang'
 const FormItem = Form.Item
 const Option = Select.Option
 const dateFormat = 'YYYY-MM-DD'
-import '../static/stylesheets/dashboard.css'
+import '../assets/stylesheets/dashboard.less'
 
 class Dashboard extends Component {
   constructor(props) {

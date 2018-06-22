@@ -1,4 +1,4 @@
-import '../static/stylesheets/loading.css'
+import '../assets/stylesheets/loading.less'
 
 const Spin = (props) => {
   const { loading } = props;

@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
-import { Card, Pagination, Collapse, InputNumber, Button, Radio } from 'antd'
+import { Card, Pagination, Collapse, InputNumber, Button, Radio, Switch } from 'antd'
 import Layout from '../components/layout'
 import { inject, observer } from 'mobx-react'
 import { getHouseList } from '../store/actions'
 import { config } from '../config/common'
 const { picUrl } = config;
+const { Meta } = Card;
 const Panel = Collapse.Panel;
+const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
-import '../static/stylesheets/index.css'
+import '../assets/stylesheets/index.less'
 
 
 const getRent = (title) => {
@@ -19,7 +21,7 @@ const CardList = ({houseList}) => {
   const list = houseList || [];
   return list.map((item, index) => {
     const detail_imgs = JSON.parse(item.detail_imgs);
-    const cover = detail_imgs[0] ? picUrl.view + detail_imgs[0] : 'http://d.5857.com/glgs_160913/003.jpg';
+    const cover = detail_imgs[0] ? picUrl.view + detail_imgs[0] : 'https://upfile.asqql.com/2009pasdfasdfic2009s305985-ts/2016-7/20167161815128318.jpg';
     return (
       <a href={`/detail?id=${item.id}`} target="_newtab" key={index}>
         <Card
@@ -28,11 +30,11 @@ const CardList = ({houseList}) => {
           >
           <div className="house_card_head">
             <img src={picUrl.icon + item.avatar} alt={item.user}/>
-            <h4>{item.user}</h4>
-            <span className="pull-right">{item.create_time}</span>
+            <h3>{item.user}</h3>
             {/* { getRent(item.title) && <span className="house_rent_price">{'￥'+getRent(item.title)}</span> } */}
           </div>
           <p>{item.title}</p>
+          <span className="card_foot">{item.create_time}</span>
         </Card>
       </a> 
     )
@@ -47,7 +49,8 @@ class Home extends Component {
     this.state = {
       current: 1,
       rentRange: [1000, 5000],
-      unit: ''
+      unit: '',
+      checked: false
     }
   }
 
@@ -57,6 +60,12 @@ class Home extends Component {
 
   componentWillUnmount = () => {
     console.log(1);
+  }
+
+  onSwitchChange = (checked) => {
+    this.setState({
+      checked
+    })
   }
   
   onPageChange = (page) => {
@@ -86,12 +95,21 @@ class Home extends Component {
   }
 
   filter = () => {
-    const { rentRange, unit } = this.state;
-    getHouseList({rentRange, unit, page: 1});
+    const { checked, rentRange, unit } = this.state;
+    getHouseList(Object.assign({ unit, page: 1}, checked?{ rentRange }:null));
+  }
+
+  reset = () => {
+    this.setState({
+      unit: '',
+      checked: false
+    })
+    getHouseList();
   }
 
   render () {
     const { houseList = [], houseAmount } = this.props.store;
+    const { checked, unit } = this.state;
     return (
       <Layout>
         <div className="home">
@@ -101,29 +119,33 @@ class Home extends Component {
                 <ul>
                   <li>
                     <label>租金：</label>
+                    <Switch checked={checked} onChange={this.onSwitchChange} style={{marginRight: 5, verticalAlign: 'text-top'}}/>
                     <InputNumber
                       defaultValue={1000}
                       onChange={this.onRentRangeChange.bind(null, 'from')}
+                      disabled={!checked}
                     />
                     <span className="separators">-</span>
                     <InputNumber
                       defaultValue={5000}
                       onChange={this.onRentRangeChange.bind(null, 'to')}
+                      disabled={!checked}
                     />
                   </li>
                   <li>
                     <label>厅室：</label>
-                    <RadioGroup onChange={this.onUnitChange}>
-                      <Radio value="一室">一室</Radio>
-                      <Radio value="二室">二室</Radio>
-                      <Radio value="三室">三室</Radio>
-                      <Radio value="四室">四室</Radio>
+                    <RadioGroup value={unit} onChange={this.onUnitChange}>
+                      <RadioButton value="">默认</RadioButton>
+                      <RadioButton value="一室">一室</RadioButton>
+                      <RadioButton value="二室">二室</RadioButton>
+                      <RadioButton value="三室">三室</RadioButton>
+                      <RadioButton value="四室">四室</RadioButton>
                     </RadioGroup>
                   </li>
                   <li>
                     <label>　　　</label>
                     <Button type="primary" htmlType="button" onClick={this.filter}>筛选</Button>
-                    <Button htmlType="button" style={{marginLeft: 6}}>重置</Button>
+                    <Button htmlType="button" style={{marginLeft: 6}} onClick={this.reset}>重置</Button>
                   </li>
                 </ul>
               </Panel>

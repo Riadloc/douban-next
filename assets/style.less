@@ -1,0 +1,43 @@
+@import "~antd/dist/antd.less";
+@import "~minireset.css";
+
+body {
+  background-color: #f6f6f6;
+}
+.app_header {
+  position: relative;
+  z-index: 100;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(26,26,26,.1);
+  background-clip: content-box;
+  .logo {
+    cursor: pointer;
+    flex: 0 0 150px;
+    img {
+      width: 100%;
+    }
+  }
+  .app_header_inner {
+    display: flex;
+    align-items: center;
+    height: 52px;
+  }
+  .navigation {
+    width: 160px;
+  }
+  @media screen and (max-width: 567px) {
+    .search_content {
+      display: none;
+    }
+  }
+}
+.app-content {
+  padding: 10px 0 30px;
+}
+.fine-home-spin {
+  position: fixed!important;
+  top: 40%;
+  left: 50%;
+  display: none;
+}
