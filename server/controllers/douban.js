@@ -1,6 +1,16 @@
-const nodejieba = require('nodejieba');
-const { spider } = require('../services/spider')
+const Segment  = require('segment');
+const { spider } = require('../services/spider');
 const { findDataByParams, findDataById, count } = require('../utils/db-util');
+
+const segment = new Segment();
+segment.use({
+  type: 'optimizer',
+  init: function (segment) {},
+  doOptimize: function (words) {
+    return words.filter(item => !/的|得|地/.test(item.w));
+  }
+});
+segment.useDefault();
 
 module.exports = {
   doSpider(ctx) {
@@ -14,7 +24,11 @@ module.exports = {
     let reg = '^.*$';
     let { keyword, unit } = formdata;
     if (keyword && keyword.trim()) {
-      const result = nodejieba.extract(keyword, 5).map(item => `(?=.*${item.word})`).join('');
+      const result = segment.doSegment(keyword, {
+        stripPunctuation: true,
+        stripStopword: true,
+        simple: true
+      }).map(item => `(?=.*${item.word})`).join('');
       reg = result + reg;
     }
     if (!unit) {
