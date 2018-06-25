@@ -1,21 +1,31 @@
 import React, { Component } from 'react'
 import { Card, Pagination, Collapse, InputNumber, Button, Radio, Switch } from 'antd'
+import getRequestAnimationFrame  from 'antd/lib/_util/getRequestAnimationFrame'
 import Layout from '../components/layout'
 import { inject, observer } from 'mobx-react'
 import { getHouseList } from '../store/actions'
 import { config } from '../config/common'
+import '../assets/stylesheets/index.less'
+
 const { picUrl } = config;
-const { Meta } = Card;
 const Panel = Collapse.Panel;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
-import '../assets/stylesheets/index.less'
+const reqAnimFrame = getRequestAnimationFrame();
 
+const currentScrollTop = () => {
+  return window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop;
+};
 
-const getRent = (title) => {
-  const reg = /\d{4}/;
-  return title.match(reg) || '';
-}
+const easeInOutCubic = (t, b, c, d) => {
+  const cc = c - b;
+  t /= d / 2;
+  if (t < 1) {
+    return cc / 2 * t * t * t + b;
+  } else {
+    return cc / 2 * ((t -= 2) * t * t + 2) + b;
+  }
+};
 
 const CardList = ({houseList}) => {
   const list = houseList || [];
@@ -58,10 +68,6 @@ class Home extends Component {
     getHouseList();
   }
 
-  componentWillUnmount = () => {
-    console.log(1);
-  }
-
   onSwitchChange = (checked) => {
     this.setState({
       checked
@@ -69,10 +75,30 @@ class Home extends Component {
   }
   
   onPageChange = (page) => {
+    this.scrollToTop();
     this.setState({
       current: page
     })
     getHouseList({page});
+  }
+
+  scrollToTop = () => {
+    const scrollTop = currentScrollTop();
+    const startTime = Date.now();
+    const frameFunc = () => {
+      const timestamp = Date.now();
+      const time = timestamp - startTime;
+      this.setScrollTop(easeInOutCubic(time, scrollTop, 0, 450));
+      if (time < 450) {
+        reqAnimFrame(frameFunc);
+      }
+    };
+    reqAnimFrame(frameFunc);
+  }
+
+  setScrollTop(value) {
+    document.body.scrollTop = value;
+    document.documentElement.scrollTop = value;
   }
 
   onRentRangeChange = (type, value) => {

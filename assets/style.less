@@ -19,16 +19,33 @@ body {
     }
   }
   .app_header_inner {
-    display: flex;
-    align-items: center;
+    transition: transform .2s ease-in;
+    transform-origin: 0 0;
     height: 52px;
+    &>div {
+      height: 52px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+    }
+    .search_input {
+      display: none;
+    }
+    .search_icon {
+      display: none;
+    }
   }
   .navigation {
-    width: 160px;
+    flex: 1;
+  }
+  @media screen and (min-width: 567px) {
+    .search_input {
+      display: inline-block!important;
+    }
   }
   @media screen and (max-width: 567px) {
-    .search_content {
-      display: none;
+    .search_icon {
+      display: inline-block!important;
     }
   }
 }

@@ -1,12 +1,14 @@
 const database = require("../static/config")
 const mysql = require("mysql")
 
+const table = 'douban';
 const pool = mysql.createPool({
   host     : 'localhost',
   user     : 'root',
   password : 'corejava',
   database : 'world'
 });
+
 
 let query = function( sql, values ) {
 
@@ -43,7 +45,7 @@ let findDataById = function( {table='douban',  id} ) {
 }
 
 
-let findDataByParams = function({page=1,pageSize=12,keyword,rentRange=[0,10000],unit,order='update_time'}, table = 'douban') {
+let findDataByParams = function({page=1,pageSize=12,keyword,rentRange=[0,10000],unit,order='update_time'}) {
   const start = (page - 1) * pageSize;
   let  _sql =  "SELECT * FROM ?? WHERE title REGEXP ? AND (rent>=? AND rent <=?) AND unit REGEXP ? ORDER BY ?? DESC LIMIT ? , ?"
   return query( _sql, [table, keyword, rentRange[0], rentRange[1], unit, order, start, pageSize ] )
@@ -73,9 +75,9 @@ let select = function( table, keys ) {
   return query( _sql, [ keys, table ] )
 }
 
-let count = function( {table = 'douban', keyword} ) {
-  let  _sql =  "SELECT COUNT(*) AS total_count FROM ?? WHERE title REGEXP ?"
-  return query( _sql, [ table, keyword ] )
+let count = function( {keyword,rentRange=[0,10000],unit} ) {
+  let  _sql =  "SELECT COUNT(*) AS total_count FROM ?? WHERE title REGEXP ? AND (rent>=? AND rent <=?) AND unit REGEXP ?"
+  return query( _sql, [ table, keyword, rentRange[0], rentRange[1], unit ] )
 }
 
 module.exports = {

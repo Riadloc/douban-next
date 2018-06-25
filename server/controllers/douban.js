@@ -28,7 +28,8 @@ module.exports = {
         stripPunctuation: true,
         stripStopword: true,
         simple: true
-      }).map(item => `(?=.*${item.word})`).join('');
+      }).map(item => `(?=.*${item})`).join('');
+      console.log(result);
       reg = result + reg;
     }
     if (!unit) {
