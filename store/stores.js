@@ -10,11 +10,20 @@ class HouseStore {
   }
 
   @action
-  loadHouseData = list => {
-    this.houseList.clear();
+  loadHouseData = (list, reset) => {
+    if (reset) {
+      this.houseList.clear();
+      this.houseAmount = 0;
+    }
     const {houseList, amount} = list;
-    this.houseList = houseList;
+    this.houseList = [...this.houseList, ...houseList];
     this.houseAmount = amount;
+  }
+
+  @action
+  clearHouseData = () => {
+    this.houseList.clear();
+    this.houseAmount = 0;
   }
 }
 
