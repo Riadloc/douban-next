@@ -4,7 +4,7 @@ const mysql = require("mysql")
 const table = 'douban';
 const pool = mysql.createPool({
   host     : 'localhost',
-  user     : 'root',
+  user     : 'scott',
   password : 'corejava',
   database : 'world'
 });

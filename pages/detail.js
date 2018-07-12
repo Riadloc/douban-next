@@ -39,7 +39,7 @@ class Detail extends Component {
             <div className="house_desc">
               { houseInfo.description }
             </div>
-            <ImageList images={detail_imgs}/>
+           <ImageList images={detail_imgs}/>
             <div className="house_source_link pull-right">
               <p>来源：<a href={houseInfo.link}>{houseInfo.link}</a></p>
             </div>

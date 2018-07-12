@@ -25,6 +25,7 @@ module.exports = {
     const delay = (currentHour < 21 && currentHour > 4) ? 1500 : 800;
     console.log(delay);
     const browser = await puppeteer.launch({
+      executablePath: '/usr/lib64/chromium-browser/chromium-browser',
       args: ['--no-sandbox']
     });
     let start = 0;
