@@ -24,8 +24,8 @@ class Detail extends Component {
   // }
 
   render() {
-    const { houseInfo } = this.props.house_info;
-    const detail_imgs = JSON.parse(houseInfo.detail_imgs);
+    // const { houseInfo } = this.props.house_info;
+    // const detail_imgs = JSON.parse(houseInfo.detail_imgs);
     return (
       <Layout>
         <div className="detail">
