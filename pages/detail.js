@@ -17,11 +17,11 @@ class Detail extends Component {
     super(props);
   }
 
-  static async getInitialProps({query}) {
-    const { id } = query;
-    const house_info = await fetch('/api/getHouseById', {method: 'post', data: {id}})
-    return {house_info};
-  }
+  // static async getInitialProps({query}) {
+  //   const { id } = query;
+  //   const house_info = await fetch('/api/getHouseById', {method: 'post', data: {id}})
+  //   return {house_info};
+  // }
 
   render() {
     const { houseInfo } = this.props.house_info;
@@ -29,7 +29,7 @@ class Detail extends Component {
     return (
       <Layout>
         <div className="detail">
-          <h1>{houseInfo.title}</h1>
+          {/* <h1>{houseInfo.title}</h1>
           <div className="user_info">
             <img src={picUrl.icon + houseInfo.avatar} alt={houseInfo.user}/>
             <h4>{houseInfo.user}</h4>
@@ -43,7 +43,8 @@ class Detail extends Component {
             <div className="house_source_link pull-right">
               <p>来源：<a href={houseInfo.link}>{houseInfo.link}</a></p>
             </div>
-          </div>
+          </div> */}
+          111
         </div>
         <style jsx global>{`
           .detail {
