@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Pagination, Collapse, InputNumber, Button, Radio, Switch } from 'antd'
+import { Card, BackTop, Collapse, InputNumber, Button, Radio, Switch } from 'antd'
 import getRequestAnimationFrame  from 'antd/lib/_util/getRequestAnimationFrame'
 import Layout from '../components/layout'
 import { inject, observer } from 'mobx-react'
@@ -80,6 +80,15 @@ class Home extends Component {
       current: page
     })
     getHouseList({page});
+  }
+
+  loadMore = () => {
+    let { current } = this.state;
+    current = current + 1;
+    this.setState({
+      current: current
+    })
+    getHouseList({page: current});
   }
 
   scrollToTop = () => {
@@ -182,15 +191,17 @@ class Home extends Component {
             <div className="card_list">
               <CardList houseList={houseList}/>
             </div>
-            <div className="house_card_pagination">
-              <Pagination current={this.state.current} onChange={this.onPageChange} total={houseAmount} pageSize={12}/>
-            </div>
+            {houseList.length<houseAmount && <div className="house_card_pagination">
+              <Button type="primary" icon="retweet" onClick={this.loadMore}>加载更多</Button>
+              {/* <Pagination current={this.state.current} onChange={this.onPageChange} total={houseAmount} pageSize={12}/> */}
+            </div>}
           </div> :
           <div>
             未查到相关租房信息！
           </div>
           }
         </div>
+        <BackTop />
       </Layout>
     )
   }
